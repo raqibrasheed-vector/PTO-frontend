@@ -7,7 +7,8 @@ import { allApi } from "@/services/all-api";
 
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { Navigate } from "react-router";
+import { RolesEnums } from "@/modules/authentication/enums/auth-enums";
 
 export default function ProtectedRoute({
   children,
@@ -41,6 +42,7 @@ export default function ProtectedRoute({
       localStorage.clear();
       sessionStorage.clear();
     }
+
   }, [signout, dispatch]);
 
   /**
@@ -86,6 +88,24 @@ export default function ProtectedRoute({
    */
   if (!hasValidUser) {
     return <Navigate to="/" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+export function AdminRoute({ children }: { children: React.ReactNode }) {
+  const { isLoading, currentUser } = useCurrentUserHook();
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center overflow-hidden">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (currentUser?.group !== RolesEnums.Admin) {
+    return <Navigate to="/home" replace />;
   }
 
   return <>{children}</>;

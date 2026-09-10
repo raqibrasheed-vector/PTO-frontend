@@ -3,6 +3,8 @@ import LoginPage from "@/modules/authentication/pages/Login";
 import HomeLayout from "@/modules/home/layouts/main";
 import VacationCalculator from "@/modules/home/pages/VacationCalculator";
 import ProtectedRoute from "./protected-route";
+import { AdminRoute } from "./protected-route";
+import NotFound from "@/components/not-found/not-found";
 import ReportScreen from "@/modules/reports/pages/main";
 
 /**
@@ -29,9 +31,17 @@ const router = createBrowserRouter([
       },
       {
         path: "report",
-        Component: ReportScreen,
+        element: (
+          <AdminRoute>
+            <ReportScreen />
+          </AdminRoute>
+        ),
       },
     ],
+  },
+  {
+    path: "*",
+    Component: NotFound,
   },
 ]);
 
