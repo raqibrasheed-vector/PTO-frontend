@@ -23,14 +23,16 @@ jobs:
           submodules: true
           lfs: false
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
           node-version: 20
           cache: 'pnpm'
-
-      - name: Enable pnpm
-        run: corepack enable
 
       - run: pnpm install --frozen-lockfile
 
@@ -60,14 +62,16 @@ jobs:
           submodules: true
           lfs: false
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
           node-version: 20
           cache: 'pnpm'
-
-      - name: Enable pnpm
-        run: corepack enable
 
       - run: pnpm install --frozen-lockfile
       
