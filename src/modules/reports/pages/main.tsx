@@ -189,8 +189,8 @@ const ReportScreen = () => {
       downloadFile(
         file,
         currentYear
-          ? `${currentView}-report-${year}.csv`
-          : `${currentView}-report.csv`,
+          ? `${currentView}-report-${year}.xlsx`
+          : `${currentView}-report.xlsx`,
       );
     } catch (error) {
       setExportError(error);
