@@ -18,7 +18,25 @@ import {
 } from "../api/reports-api";
 import ReportError from "../components/report-error";
 
-const PAGE_SIZE = 20;
+const MIN_PAGE_SIZE = 20;
+const MAX_PAGE_SIZE = 100;
+const REPORT_ROW_HEIGHT = 28;
+const REPORT_RESERVED_HEIGHT = 260;
+
+function getPageSize() {
+  if (typeof window === "undefined") return MIN_PAGE_SIZE;
+
+  return Math.max(
+    MIN_PAGE_SIZE,
+    Math.min(
+      MAX_PAGE_SIZE,
+      Math.floor(
+        (window.innerHeight - REPORT_RESERVED_HEIGHT) / REPORT_ROW_HEIGHT,
+      ),
+    ),
+  );
+}
+
 function downloadFile(file: Blob, filename: string) {
   const url = URL.createObjectURL(file);
   const link = document.createElement("a");
@@ -53,6 +71,7 @@ const ReportScreen = () => {
   const [filterStates, setFilterStates] = useState<
     Record<"audit" | "feedback", FilterStates[]>
   >({ audit: [], feedback: [] });
+  const [pageSize, setPageSize] = useState(getPageSize);
   const filterState = filterStates[currentView];
   const setFilterState: Dispatch<SetStateAction<FilterStates[]>> = (value) => {
     setFilterStates((previous) => ({
@@ -85,7 +104,7 @@ const ReportScreen = () => {
     refetch: retryAudit,
   } = useGetAuditDataQuery(
     {
-      limit: PAGE_SIZE,
+      limit: pageSize,
       offset,
       filters: filterState,
       start_date: startDate && endDate ? startDate : undefined,
@@ -100,7 +119,7 @@ const ReportScreen = () => {
     refetch: retryFeedback,
   } = useGetFeedbackDataQuery(
     {
-      limit: PAGE_SIZE,
+      limit: pageSize,
       offset,
       filters: filterState,
       start_date: startDate && endDate ? startDate : undefined,
@@ -116,6 +135,21 @@ const ReportScreen = () => {
     setOffset(0);
   }, [filterState, startDate, endDate]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setPageSize(getPageSize());
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    // A changed page size invalidates the current offset.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setOffset(0);
+  }, [pageSize]);
+
   const reportData =
     currentView === "audit" ? auditTableData : feedbackTableData;
   const reportError = currentView === "audit" ? auditError : feedbackError;
@@ -124,7 +158,7 @@ const ReportScreen = () => {
   const retryReport = currentView === "audit" ? retryAudit : retryFeedback;
   const totalRecords = reportData?.total_records ?? 0;
   const totalPages = reportData?.total_pages ?? 0;
-  const currentPage = reportData?.page ?? Math.floor(offset / PAGE_SIZE) + 1;
+  const currentPage = reportData?.page ?? Math.floor(offset / pageSize) + 1;
   const firstResult =
     totalRecords === 0 ? 0 : (reportData?.start ?? offset) + 1;
   const lastResult =
@@ -350,7 +384,7 @@ const ReportScreen = () => {
           <button
             type="button"
             onClick={() =>
-              setOffset(Math.max(0, (currentPage - 2) * PAGE_SIZE))
+              setOffset(Math.max(0, (currentPage - 2) * pageSize))
             }
             disabled={!hasPreviousPage || isReportFetching}
             className={`rounded px-3 py-1 font-medium ${
@@ -366,7 +400,7 @@ const ReportScreen = () => {
           </span>
           <button
             type="button"
-            onClick={() => setOffset(currentPage * PAGE_SIZE)}
+            onClick={() => setOffset(currentPage * pageSize)}
             disabled={!hasNextPage || isReportFetching}
             className={`rounded px-3 py-1 font-medium ${
               !hasNextPage || isReportFetching
