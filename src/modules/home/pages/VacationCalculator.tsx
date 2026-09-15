@@ -18,6 +18,7 @@ import {
 } from "../api/analytics/analytics-api";
 import ErrorDisplay, { type ErrorState } from "../components/ErrorDisplay";
 import { useEffect, useState } from "react";
+import dayjs from "dayjs";
 import type { ApiErrorState } from "@/types/api-error";
 import CalculatorLoading from "../components/CalculatorLoading";
 import EmployeeDetails from "../components/EmployeeDetailsView";
@@ -63,6 +64,7 @@ const VacationCalculator = () => {
     formState: { errors, isValid },
     control,
     getValues,
+    setValue,
     reset,
   } = useForm<EmployeeDetailsFomrm>();
 
@@ -264,6 +266,13 @@ const VacationCalculator = () => {
               id={"start_date"}
               control={control}
               rules={{ required: "Start date is required" }}
+              onChange={(value) => {
+                if (value) {
+                  setValue("end_date", dayjs().format("YYYY-MM-DD"), {
+                    shouldValidate: true,
+                  });
+                }
+              }}
               sx={{
                 "& .MuiPickersOutlinedInput-root": {
                   height: "2.5rem",

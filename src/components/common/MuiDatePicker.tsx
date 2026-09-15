@@ -18,6 +18,7 @@ interface MuiDatePickerProps<T extends FieldValues> {
   disabled?: boolean;
   rules?: RegisterOptions<T, Path<T>>;
   sx: SxProps<Theme>;
+  onChange?: (value: string) => void;
 }
 
 const MuiDatePicker = <T extends FieldValues>({
@@ -27,6 +28,7 @@ const MuiDatePicker = <T extends FieldValues>({
   disabled = false,
   rules,
   sx,
+  onChange,
 }: MuiDatePickerProps<T>) => {
   return (
     <Controller
@@ -44,13 +46,15 @@ const MuiDatePicker = <T extends FieldValues>({
             <div className="w-full">
               <DatePicker
                 value={dateValue}
-                onChange={(newValue) =>
-                  field.onChange(
+                onChange={(newValue) => {
+                  const value =
                     newValue && newValue.isValid()
                       ? newValue.format("YYYY-MM-DD")
-                      : "",
-                  )
-                }
+                      : "";
+
+                  field.onChange(value);
+                  onChange?.(value);
+                }}
                 format="MM/DD/YYYY"
                 disabled={disabled}
                 slotProps={{
