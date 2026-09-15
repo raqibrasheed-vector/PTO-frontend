@@ -18,19 +18,23 @@ export const authenticationServices = allApi.injectEndpoints({
       keepUnusedDataFor: 0,
       providesTags: [],
     }),
-    signIn: builder.query<{url: string}, void>({
+    signIn: builder.query<{ url: string }, void>({
       query: () => ({
         url: "/saml/login",
         method: ApiMethod.GET,
-      })
+      }),
     }),
     signout: builder.mutation<{ isSignout: boolean }, void>({
       query: () => ({
         url: "/saml/signout",
         method: ApiMethod.POST,
-      })
+      }),
     }),
   }),
 });
 
-export const { useGetCurrentUserQuery, useSignoutMutation, useLazySignInQuery } = authenticationServices;
+export const {
+  useGetCurrentUserQuery,
+  useSignoutMutation,
+  useLazySignInQuery,
+} = authenticationServices;
