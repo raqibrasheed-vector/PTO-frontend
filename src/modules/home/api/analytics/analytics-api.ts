@@ -25,7 +25,7 @@ const analyticsApi = allApi.injectEndpoints({
       EmployeeDetailsFomrm
     >({
       query: (employeeDetails) => ({
-        url: "/analytics/employee-details",
+        url: "/api/analytics/employee-details",
         method: ApiMethod.POST,
         body: employeeDetails,
       }),
@@ -56,7 +56,7 @@ const analyticsApi = allApi.injectEndpoints({
         }
 
         return {
-          url: "/analytics/process-document",
+          url: "/api/analytics/process-document",
           method: ApiMethod.POST,
           body: formData,
         };
@@ -74,7 +74,7 @@ const analyticsApi = allApi.injectEndpoints({
       CalculateVacationForm
     >({
       query: (calculateVacationDetails) => ({
-        url: "/analytics/calculate-vacation",
+        url: "/api/analytics/calculate-vacation",
         method: ApiMethod.POST,
         body: calculateVacationDetails,
       }),
@@ -85,7 +85,7 @@ const analyticsApi = allApi.injectEndpoints({
       FeedBackFormSubmit
     >({
       query: (feedBackData) => ({
-        url: "/analytics/submit-feedback",
+        url: "/api/analytics/submit-feedback",
         method: ApiMethod.POST,
         body: feedBackData,
       }),

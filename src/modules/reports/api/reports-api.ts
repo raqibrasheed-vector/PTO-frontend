@@ -23,7 +23,7 @@ export const reportsApiServices = allApi.injectEndpoints({
       { tableFilters: "audit" | "feedback" }
     >({
       query: ({ tableFilters }) => ({
-        url: "/reporting/table-filters",
+        url: "/api/reporting/table-filters",
         method: ApiMethod.GET,
         params: { filter_data: tableFilters },
       }),
@@ -36,7 +36,7 @@ export const reportsApiServices = allApi.injectEndpoints({
       AuditRequest
     >({
       query: ({ ...auditRequest }) => ({
-        url: "/reporting/audit-data",
+        url: "/api/reporting/audit-data",
         method: ApiMethod.POST,
         body: auditRequest,
       }),
@@ -48,7 +48,7 @@ export const reportsApiServices = allApi.injectEndpoints({
       AuditRequest
     >({
       query: (request) => ({
-        url: "/reporting/feedback-data",
+        url: "/api/reporting/feedback-data",
         method: ApiMethod.POST,
         body: request,
       }),
@@ -60,7 +60,7 @@ export const reportsApiServices = allApi.injectEndpoints({
       Omit<AuditRequest, "limit" | "offset">
     >({
       query: (request) => ({
-        url: "/reporting/audit-export",
+        url: "/api/reporting/audit-export",
         method: ApiMethod.POST,
         body: request,
         responseHandler: (response) => response.blob(),
@@ -71,7 +71,7 @@ export const reportsApiServices = allApi.injectEndpoints({
       Omit<AuditRequest, "limit" | "offset">
     >({
       query: (request) => ({
-        url: "/reporting/feedback-export",
+        url: "/api/reporting/feedback-export",
         method: ApiMethod.POST,
         body: request,
         responseHandler: (response) => response.blob(),
